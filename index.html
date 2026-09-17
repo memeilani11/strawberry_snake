@@ -42,15 +42,15 @@
 
   /* ===== STAGE (VERTIKAL) ===== */
   #stage{display:flex;flex-direction:column;align-items:center;
-    gap:8px;padding:8px;height:calc(100% - 62px);min-height:0}
+    gap:6px;padding:6px;height:calc(100% - 62px);min-height:0}
   #boardWrap{flex:1;display:flex;align-items:center;justify-content:center;
-    min-height:0;width:100%}
+    min-height:0;width:100%;padding:0 4px}
   canvas{background:#fffafd;border:3px solid #ff91b9;border-radius:12px;
     display:block;touch-action:none;max-width:100%;max-height:100%}
 
   /* ===== BARIS BAWAH: TOMBOL (KIRI) + JOYSTICK (KANAN) ===== */
-  #bottomRow{display:flex;gap:10px;align-items:center;justify-content:center;
-    width:100%;flex-shrink:0}
+  #bottomRow{display:flex;gap:10px;align-items:center;justify-content:space-between;
+    width:100%;flex-shrink:0;padding:0 8px}
 
   /* Tombol PAUSE & RESET di kiri */
   #btnCol{display:flex;flex-direction:column;gap:8px}
@@ -61,7 +61,7 @@
 
   /* Joystick di kanan */
   #joyWrap{background:#f8e8f5;border:2px solid #dcbedc;border-radius:16px;
-    padding:8px 14px;display:flex;align-items:center;gap:10px;
+    padding:8px 12px;display:flex;align-items:center;gap:8px;
     touch-action:none}
   #joy{width:100px;height:100px;border-radius:50%;background:#fff;
     border:5px solid #dcbedc;position:relative;touch-action:none;
@@ -112,7 +112,7 @@
   <div id="stats">
     <div class="st">SCORE <span id="sc">0</span></div>
     <div class="st">BEST <span id="bs">0</span></div>
-    <div class="st">FOOD <span id="fd">5</span></div>
+    <div class="st">FOOD <span id="fd">8</span></div>
   </div>
 </div>
 
@@ -178,13 +178,14 @@
   var CV  = document.getElementById('cv');
   var ctx = CV.getContext('2d');
 
-  var G = 20;
-  var COLS = 13;
-  var ROWS = 18;
-  var W = COLS * G;
-  var H = ROWS * G;
+  // Papan lebih lebar: 20 kolom x 22 baris, kotak 16px → 320x352
+  var G = 16;
+  var COLS = 20;
+  var ROWS = 22;
+  var W = COLS * G;   // 320
+  var H = ROWS * G;   // 352
 
-  var FOOD_N  = 5;
+  var FOOD_N  = 8;    // makanan ditambah karena papan lebih luas
   var STEP_MS = 180;
 
   CV.width  = W;
@@ -198,7 +199,7 @@
 
   // ============ GAMBAR ============
   function drawStrawberry(px, py){
-    var cx = px + G/2, cy = py + G/2, r = G * 0.4;
+    var cx = px + G/2, cy = py + G/2, r = G * 0.42;
     ctx.fillStyle = '#f04664';
     ctx.beginPath(); ctx.arc(cx - r*0.5, cy - r*0.05, r*0.55, 0, Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(cx + r*0.5, cy - r*0.05, r*0.55, 0, Math.PI*2); ctx.fill();
@@ -216,9 +217,9 @@
     ctx.lineTo(cx + r*0.5, cy - r*0.35);
     ctx.closePath(); ctx.fill();
     ctx.fillStyle = '#ffdc78';
-    ctx.beginPath(); ctx.arc(cx - r*0.35, cy - r*0.05, 1.4, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(cx + r*0.35, cy - r*0.05, 1.4, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(cx, cy + r*0.3, 1.4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx - r*0.35, cy - r*0.05, 1.2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + r*0.35, cy - r*0.05, 1.2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy + r*0.3, 1.2, 0, Math.PI*2); ctx.fill();
   }
 
   function drawHead(px, py){
@@ -294,7 +295,7 @@
 
   function fillFoods(){
     var guard = 0;
-    while (foods.length < FOOD_N && guard++ < 300) {
+    while (foods.length < FOOD_N && guard++ < 500) {
       var f = randFood();
       if (!f) break;
       foods.push(f);
