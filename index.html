@@ -2,63 +2,60 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>Strawberry Snake</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%;overflow:hidden;background:#f4ecfa;font-family:system-ui,sans-serif;user-select:none}
-  #app{display:flex;flex-direction:column;height:100%}
-  #hdr{background:#ffe1ee;padding:6px;display:flex;flex-direction:column;gap:4px}
-  #hdr h1{color:#7d5aaa;font-size:15px;text-align:center}
-  #stats{display:flex;gap:4px;justify-content:center}
-  .st{background:#fff;border:2px solid #b491e1;border-radius:8px;padding:2px 8px;font-size:11px;color:#7d5aaa;font-weight:700}
+  html,body{height:100%;overflow:hidden;background:#f4ecfa;
+    font-family:system-ui,sans-serif;user-select:none}
+  #hdr{background:#ffe1ee;padding:8px;text-align:center}
+  #hdr h1{color:#7d5aaa;font-size:16px;margin-bottom:6px}
+  #stats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+  .st{background:#fff;border:2px solid #b491e1;border-radius:8px;
+    padding:3px 10px;font-size:12px;color:#7d5aaa;font-weight:700}
   .st span{color:#e664a0}
-  #stage{flex:1;display:flex;gap:6px;padding:6px;min-height:0}
-  #boardWrap{flex:1;display:flex;align-items:center;justify-content:center}
-  canvas{background:#fffafd;border:3px solid #ff91b9;border-radius:12px;touch-action:none;display:block}
-  #joyCol{width:140px;background:#f8e8f5;border:2px solid #dcbedc;border-radius:16px;display:flex;flex-direction:column;align-items:center;padding:6px;gap:4px}
-  #joyCol p{color:#7d5aaa;font-size:10px;font-weight:700;letter-spacing:1px;margin-top:4px}
-  #joy{width:110px;height:110px;border-radius:50%;background:#fff;border:5px solid #dcbedc;position:relative;touch-action:none;margin-top:6px}
-  #knob{width:44px;height:44px;border-radius:50%;background:#ff91b9;border:3px solid #e664a0;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
-  #pauseBtn{margin-top:auto;width:100%;padding:8px;border:none;border-radius:10px;background:#b491e1;color:#fff;font-weight:700;font-size:13px}
-  #ov{position:fixed;inset:0;background:rgba(80,50,90,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:9;padding:20px;text-align:center}
-  #ov.hide{display:none}
-  #ov h1{color:#fff;font-size:32px;text-shadow:2px 2px 0 #7d5aaa;line-height:1.1}
-  #ov p{color:#ffd;font-size:13px;line-height:1.6}
-  #ov button{background:#ff91b9;color:#fff;border:none;padding:14px 40px;font-size:18px;font-weight:700;border-radius:14px;box-shadow:0 4px 0 #e664a0}
-  #ov button:active{transform:translateY(2px);box-shadow:0 2px 0 #e664a0}
-  @media(max-width:520px){
-    #joyCol{width:110px}
-    #joy{width:88px;height:88px}
-    #knob{width:36px;height:36px}
-    #ov h1{font-size:26px}
-  }
+  #game{position:relative;width:100%;display:flex;justify-content:center;
+    padding:8px}
+  canvas{background:#fffafd;border:3px solid #ff91b9;border-radius:12px;
+    display:block;touch-action:none}
+  #ctrl{position:fixed;bottom:10px;right:10px;display:flex;gap:8px;z-index:5}
+  #ctrl button{background:#b491e1;color:#fff;border:none;border-radius:12px;
+    padding:10px 16px;font-weight:700;font-size:14px;box-shadow:0 3px 0 #7d5aaa}
+  #ctrl button:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
+  #overlay{position:fixed;inset:0;background:rgba(80,50,90,.88);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:16px;z-index:10;padding:20px;text-align:center}
+  #overlay.hide{display:none}
+  #overlay h1{color:#fff;font-size:28px;line-height:1.2}
+  #overlay p{color:#ffd;font-size:14px}
+  #overlay button{background:#ff91b9;color:#fff;border:none;padding:14px 40px;
+    font-size:18px;font-weight:700;border-radius:14px;box-shadow:0 4px 0 #e664a0}
 </style>
 </head>
 <body>
-<div id="app">
-  <div id="hdr">
-    <h1>🍓 STRAWBERRY SNAKE GAME</h1>
-    <div id="stats">
-      <div class="st">SCORE <span id="sc">0</span></div>
-      <div class="st">BEST <span id="bs">0</span></div>
-      <div class="st">FOOD <span id="fd">10</span></div>
-    </div>
-  </div>
-  <div id="stage">
-    <div id="boardWrap"><canvas id="cv"></canvas></div>
-    <div id="joyCol">
-      <p>JOYSTICK</p>
-      <div id="joy"><div id="knob"></div></div>
-      <button id="pauseBtn">PAUSE</button>
-    </div>
+
+<div id="hdr">
+  <h1>🍓 STRAWBERRY SNAKE GAME</h1>
+  <div id="stats">
+    <div class="st">SCORE <span id="sc">0</span></div>
+    <div class="st">BEST <span id="bs">0</span></div>
+    <div class="st">FOOD <span id="fd">10</span></div>
   </div>
 </div>
 
-<div id="ov">
-  <h1>STRAWBERRY<br>SNAKE</h1>
-  <p>WASD / Panah / Joystick / Swipe</p>
-  <button id="btn">PLAY</button>
+<div id="game">
+  <canvas id="cv"></canvas>
+</div>
+
+<div id="ctrl">
+  <button id="pauseBtn">PAUSE</button>
+  <button id="resetBtn">RESET</button>
+</div>
+
+<div id="overlay" class="hide">
+  <h1 id="ovT">STRAWBERRY SNAKE</h1>
+  <p id="ovS">Skor: 0</p>
+  <button id="ovB">MAIN LAGI</button>
 </div>
 
 <script>
@@ -67,9 +64,18 @@
 
   var CV = document.getElementById('cv');
   var ctx = CV.getContext('2d');
-  var G, COLS, ROWS, W, H;
-  var FOOD_N = 10;
-  var STEP_MS = 160;
+  var G = 20;         // ukuran kotak (piksel)
+  var COLS = 15;      // 15 kolom
+  var ROWS = 20;      // 20 baris
+  var W = COLS * G;   // 300px
+  var H = ROWS * G;   // 400px
+  var FOOD_N = 5;
+  var STEP_MS = 180;
+
+  CV.width = W;
+  CV.height = H;
+  CV.style.width = W + 'px';
+  CV.style.height = H + 'px';
 
   var snake, dir, nextDir, foods, score, best;
   var running = false, paused = false, acc = 0, lastT = 0;
@@ -77,37 +83,9 @@
   best = parseInt(localStorage.getItem('ssBest') || '0', 10) || 0;
   document.getElementById('bs').textContent = best;
 
-  // ---------- ukuran kanvas ----------
-  function calcSize(){
-    var stage = document.getElementById('stage');
-    var r = stage.getBoundingClientRect();
-    var joyW = window.innerWidth <= 520 ? 122 : 152;
-    var availW = Math.max(200, r.width - joyW - 16);
-    var availH = Math.max(200, r.height - 12);
-    var cell = Math.floor(Math.min(availW / 28, availH / 22));
-    G = Math.max(10, cell);
-    COLS = Math.max(10, Math.floor(availW / G));
-    ROWS = Math.max(10, Math.floor(availH / G));
-    W = COLS * G; H = ROWS * G;
-    CV.width = W; CV.height = H;
-    CV.style.width = W + 'px';
-    CV.style.height = H + 'px';
-  }
-
-  // ---------- gambar ----------
-  function roundRect(x,y,w,h,r){
-    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x,y,w,h,r); ctx.fill(); }
-    else {
-      ctx.beginPath();
-      ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-      ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-      ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-      ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath(); ctx.fill();
-    }
-  }
-
-  function drawStrawberry(px,py){
-    var cx = px + G/2, cy = py + G/2, r = G*0.4;
+  // ---- gambar ----
+  function drawStrawberry(px, py){
+    var cx = px + G/2, cy = py + G/2, r = G * 0.4;
     ctx.fillStyle = '#f04664';
     ctx.beginPath(); ctx.arc(cx - r*0.5, cy - r*0.05, r*0.55, 0, Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(cx + r*0.5, cy - r*0.05, r*0.55, 0, Math.PI*2); ctx.fill();
@@ -130,33 +108,30 @@
     ctx.beginPath(); ctx.arc(cx, cy + r*0.3, 1.4, 0, Math.PI*2); ctx.fill();
   }
 
-  function drawHead(px,py){
+  function drawHead(px, py){
     ctx.fillStyle = '#ff91b9';
-    roundRect(px+2, py+2, G-4, G-4, 8);
+    ctx.fillRect(px+1, py+1, G-2, G-2);
 
-    var off = G * 0.32;
     var e1x, e1y, e2x, e2y;
-    if (dir.x === 1)       { e1x = px+G*0.68; e1y = py+G*0.32; e2x = px+G*0.68; e2y = py+G*0.68; }
-    else if (dir.x === -1) { e1x = px+G*0.32; e1y = py+G*0.32; e2x = px+G*0.32; e2y = py+G*0.68; }
-    else if (dir.y === -1) { e1x = px+G*0.32; e1y = py+G*0.32; e2x = px+G*0.68; e2y = py+G*0.32; }
-    else                   { e1x = px+G*0.32; e1y = py+G*0.68; e2x = px+G*0.68; e2y = py+G*0.68; }
+    if (dir.x === 1)       { e1x = px+G*0.68; e1y = py+G*0.35; e2x = px+G*0.68; e2y = py+G*0.65; }
+    else if (dir.x === -1) { e1x = px+G*0.32; e1y = py+G*0.35; e2x = px+G*0.32; e2y = py+G*0.65; }
+    else if (dir.y === -1) { e1x = px+G*0.35; e1y = py+G*0.32; e2x = px+G*0.65; e2y = py+G*0.32; }
+    else                   { e1x = px+G*0.35; e1y = py+G*0.68; e2x = px+G*0.65; e2y = py+G*0.68; }
 
     ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(e1x, e1y, G*0.15, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(e2x, e2y, G*0.15, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#41374b';
-    ctx.beginPath(); ctx.arc(e1x, e1y, G*0.075, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(e2x, e2y, G*0.075, 0, Math.PI*2); ctx.fill();
-
-    ctx.fillStyle = '#ff87a5';
-    ctx.beginPath(); ctx.arc(px+G*0.22, py+G*0.78, G*0.11, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(px+G*0.78, py+G*0.78, G*0.11, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(e1x, e1y, G*0.13, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(e2x, e2y, G*0.13, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.beginPath(); ctx.arc(e1x, e1y, G*0.06, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(e2x, e2y, G*0.06, 0, Math.PI*2); ctx.fill();
   }
 
   function render(){
+    // background
     ctx.fillStyle = '#fffafd';
     ctx.fillRect(0, 0, W, H);
 
+    // grid
     ctx.strokeStyle = '#eee1ed';
     ctx.lineWidth = 1;
     for (var x = 0; x <= COLS; x++) {
@@ -166,15 +141,19 @@
       ctx.beginPath(); ctx.moveTo(0, y*G); ctx.lineTo(W, y*G); ctx.stroke();
     }
 
-    for (var i = 0; i < foods.length; i++) drawStrawberry(foods[i].x*G, foods[i].y*G);
+    // makanan
+    for (var i = 0; i < foods.length; i++) {
+      drawStrawberry(foods[i].x * G, foods[i].y * G);
+    }
 
+    // ular
     for (var j = 0; j < snake.length; j++) {
       var s = snake[j];
-      var px = s.x*G, py = s.y*G;
-      if (j === 0) drawHead(px, py);
-      else {
+      if (j === 0) {
+        drawHead(s.x * G, s.y * G);
+      } else {
         ctx.fillStyle = j % 2 === 0 ? '#ffe1ee' : '#ebdcfa';
-        roundRect(px+2, py+2, G-4, G-4, 7);
+        ctx.fillRect(s.x*G + 1, s.y*G + 1, G - 2, G - 2);
       }
     }
 
@@ -182,29 +161,31 @@
       ctx.fillStyle = 'rgba(80,50,90,.55)';
       ctx.fillRect(0, 0, W, H);
       ctx.fillStyle = '#fff';
-      ctx.font = 'bold ' + Math.floor(W*0.09) + 'px system-ui';
+      ctx.font = 'bold 30px system-ui';
       ctx.textAlign = 'center';
       ctx.fillText('PAUSED', W/2, H/2);
       ctx.textAlign = 'left';
     }
   }
 
-  // ---------- logika ----------
+  // ---- logika ----
   function randFood(){
     var occupied = {};
-    for (var i = 0; i < snake.length; i++) occupied[snake[i].x+','+snake[i].y] = 1;
-    for (var k = 0; k < foods.length; k++) occupied[foods[k].x+','+foods[k].y] = 1;
+    for (var i = 0; i < snake.length; i++) occupied[snake[i].x + ',' + snake[i].y] = 1;
+    for (var k = 0; k < foods.length; k++) occupied[foods[k].x + ',' + foods[k].y] = 1;
     var free = [];
-    for (var x = 0; x < COLS; x++)
-      for (var y = 0; y < ROWS; y++)
-        if (!occupied[x+','+y]) free.push({x:x, y:y});
+    for (var x = 0; x < COLS; x++) {
+      for (var y = 0; y < ROWS; y++) {
+        if (!occupied[x + ',' + y]) free.push({x:x, y:y});
+      }
+    }
     if (!free.length) return null;
-    return free[Math.floor(Math.random()*free.length)];
+    return free[Math.floor(Math.random() * free.length)];
   }
 
   function fillFoods(){
     var guard = 0;
-    while (foods.length < FOOD_N && guard++ < 500) {
+    while (foods.length < FOOD_N && guard++ < 300) {
       var f = randFood();
       if (!f) break;
       foods.push(f);
@@ -213,22 +194,28 @@
   }
 
   function reset(){
-    calcSize();
-    var cx = Math.floor(COLS/2), cy = Math.floor(ROWS/2);
-    snake = [];
-    for (var i = 0; i < 4; i++) snake.push({x: cx - i, y: cy});
+    var cx = Math.floor(COLS / 2);
+    var cy = Math.floor(ROWS / 2);
+    snake = [
+      {x: cx,     y: cy},
+      {x: cx - 1, y: cy},
+      {x: cx - 2, y: cy},
+      {x: cx - 3, y: cy}
+    ];
     dir = {x:1, y:0};
     nextDir = {x:1, y:0};
-    foods = []; score = 0; acc = 0; paused = false;
+    foods = [];
+    score = 0;
+    acc = 0;
+    paused = false;
     document.getElementById('sc').textContent = '0';
     fillFoods();
     running = true;
+    render();  // langsung gambar
   }
 
   function setDir(nx, ny){
-    if (snake && snake.length > 1) {
-      if (nx === -dir.x && ny === -dir.y) return;
-    }
+    if (nx === -dir.x && ny === -dir.y) return;
     nextDir = {x:nx, y:ny};
   }
 
@@ -268,49 +255,41 @@
 
   function gameOver(){
     running = false;
-    showOverlay('GAME OVER', 'Score: ' + score + ' | Best: ' + best, 'MAIN LAGI');
+    document.getElementById('ovT').textContent = 'GAME OVER';
+    document.getElementById('ovS').textContent = 'Skor: ' + score + ' | Best: ' + best;
+    document.getElementById('overlay').classList.remove('hide');
   }
 
-  // ---------- overlay ----------
-  var ov = document.getElementById('ov');
-  function showOverlay(title, sub, btn){
-    ov.innerHTML = '<h1>' + title + '</h1><p>' + sub + '</p>' +
-                   '<button id="btn">' + btn + '</button>';
-    ov.classList.remove('hide');
-    document.getElementById('btn').onclick = function(){ ov.classList.add('hide'); reset(); };
-  }
-
-  document.getElementById('btn').onclick = function(){
-    ov.classList.add('hide');
-    reset();
-  };
-
-  // ---------- loop ----------
+  // ---- loop ----
   function loop(t){
     if (!lastT) lastT = t;
-    var dt = t - lastT; lastT = t;
+    var dt = t - lastT;
+    lastT = t;
     if (dt > 250) dt = 250;
     if (running && !paused) {
       acc += dt;
       var guard = 0;
-      while (acc >= STEP_MS && guard++ < 5) { acc -= STEP_MS; tick(); }
+      while (acc >= STEP_MS && guard++ < 5) {
+        acc -= STEP_MS;
+        tick();
+      }
     }
     render();
     requestAnimationFrame(loop);
   }
 
-  // ---------- keyboard ----------
+  // ---- kontrol ----
   window.addEventListener('keydown', function(e){
     var k = e.key.toLowerCase();
     if (k === 'arrowup' || k === 'w')    setDir(0, -1);
     else if (k === 'arrowdown' || k === 's')  setDir(0, 1);
     else if (k === 'arrowleft' || k === 'a')  setDir(-1, 0);
     else if (k === 'arrowright' || k === 'd') setDir(1, 0);
-    else if (k === 'p' || k === ' ') paused = !paused;
-    if (['arrowup','arrowdown','arrowleft','arrowright',' '].indexOf(k) >= 0) e.preventDefault();
+    else if (k === 'p') paused = !paused;
+    if (['arrowup','arrowdown','arrowleft','arrowright'].indexOf(k) >= 0) e.preventDefault();
   }, {passive:false});
 
-  // ---------- swipe ----------
+  // swipe
   var sx = 0, sy = 0;
   CV.addEventListener('touchstart', function(e){
     sx = e.touches[0].clientX;
@@ -324,64 +303,20 @@
     else setDir(0, dy > 0 ? 1 : -1);
   }, {passive:true});
 
-  // ---------- joystick ----------
-  var joy = document.getElementById('joy');
-  var knob = document.getElementById('knob');
-  var joyActive = false;
-
-  function joyMove(cx, cy){
-    var r = joy.getBoundingClientRect();
-    var ox = r.left + r.width / 2;
-    var oy = r.top + r.height / 2;
-    var dx = cx - ox, dy = cy - oy;
-    var maxR = r.width / 2 - 22;
-    var d = Math.sqrt(dx*dx + dy*dy);
-    if (d > maxR) { dx = dx / d * maxR; dy = dy / d * maxR; }
-    knob.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
-    if (d < 12) return;
-    if (Math.abs(dx) > Math.abs(dy)) setDir(dx > 0 ? 1 : -1, 0);
-    else setDir(0, dy > 0 ? 1 : -1);
-  }
-  function joyReset(){
-    joyActive = false;
-    knob.style.transform = 'translate(-50%,-50%)';
-  }
-  joy.addEventListener('touchstart', function(e){
-    joyActive = true;
-    joyMove(e.touches[0].clientX, e.touches[0].clientY);
-    e.preventDefault();
-  }, {passive:false});
-  joy.addEventListener('touchmove', function(e){
-    if (joyActive) { joyMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }
-  }, {passive:false});
-  joy.addEventListener('touchend', function(e){ joyReset(); e.preventDefault(); }, {passive:false});
-  joy.addEventListener('mousedown', function(e){ joyActive = true; joyMove(e.clientX, e.clientY); });
-  window.addEventListener('mousemove', function(e){ if (joyActive) joyMove(e.clientX, e.clientY); });
-  window.addEventListener('mouseup', joyReset);
-
-  // ---------- pause button ----------
   document.getElementById('pauseBtn').onclick = function(){
     if (running) paused = !paused;
   };
+  document.getElementById('resetBtn').onclick = function(){
+    document.getElementById('overlay').classList.add('hide');
+    reset();
+  };
+  document.getElementById('ovB').onclick = function(){
+    document.getElementById('overlay').classList.add('hide');
+    reset();
+  };
 
-  // ---------- resize ----------
-  var rzTimer;
-  window.addEventListener('resize', function(){
-    clearTimeout(rzTimer);
-    rzTimer = setTimeout(function(){
-      calcSize();
-      // clamp snake
-      for (var i = 0; i < snake.length; i++) {
-        snake[i].x = Math.min(COLS - 1, Math.max(0, snake[i].x));
-        snake[i].y = Math.min(ROWS - 1, Math.max(0, snake[i].y));
-      }
-      foods = [];
-      fillFoods();
-    }, 250);
-  });
-
-  // ---------- start ----------
-  calcSize();
+  // ---- start ----
+  reset();
   requestAnimationFrame(loop);
 })();
 </script>
