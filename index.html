@@ -8,46 +8,99 @@
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%;overflow:hidden;background:#f4ecfa;
     font-family:system-ui,sans-serif;user-select:none}
+
+  /* ===== LOADING SCREEN ===== */
+  #loader{
+    position:fixed;inset:0;background:linear-gradient(160deg,#ffe1ee,#f4ecfa 60%,#ebdcfa);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:22px;z-index:100;
+    transition:opacity .5s ease, visibility .5s ease;
+  }
+  #loader.hide{opacity:0;visibility:hidden}
+  #loader .berry{font-size:64px;animation:spin 1.6s linear infinite;
+    filter:drop-shadow(0 6px 12px rgba(230,100,160,.4))}
+  #loader h2{color:#7d5aaa;font-size:20px;letter-spacing:2px}
+  #loader .bar{width:220px;height:10px;background:#fff;border:2px solid #dcbedc;
+    border-radius:10px;overflow:hidden}
+  #loader .bar > div{height:100%;width:0%;border-radius:10px;
+    background:linear-gradient(90deg,#ff91b9,#b491e1);
+    transition:width .25s ease}
+  #loader .pct{color:#e664a0;font-size:13px;font-weight:700}
+  @keyframes spin{
+    0%{transform:rotate(0) scale(1)}
+    50%{transform:rotate(180deg) scale(1.15)}
+    100%{transform:rotate(360deg) scale(1)}
+  }
+
+  /* ===== HEADER ===== */
   #hdr{background:#ffe1ee;padding:6px;text-align:center}
   #hdr h1{color:#7d5aaa;font-size:15px;margin-bottom:4px}
   #stats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
   .st{background:#fff;border:2px solid #b491e1;border-radius:8px;
     padding:3px 10px;font-size:12px;color:#7d5aaa;font-weight:700}
   .st span{color:#e664a0}
-  #stage{display:flex;flex-direction:column;align-items:center;gap:8px;
-    padding:8px;height:calc(100% - 70px);overflow:hidden}
+
+  /* ===== STAGE ===== */
+  #stage{display:flex;gap:8px;padding:8px;
+    height:calc(100% - 62px);min-height:0}
+  #boardWrap{flex:1;display:flex;align-items:center;justify-content:center;
+    min-width:0}
   canvas{background:#fffafd;border:3px solid #ff91b9;border-radius:12px;
-    display:block;touch-action:none}
-  #joyWrap{background:#f8e8f5;border:2px solid #dcbedc;border-radius:16px;
-    padding:8px 14px;display:flex;align-items:center;gap:14px;
-    touch-action:none;position:relative}
-  #joy{width:100px;height:100px;border-radius:50%;background:#fff;
-    border:5px solid #dcbedc;position:relative;touch-action:none}
-  #knob{width:40px;height:40px;border-radius:50%;background:#ff91b9;
+    display:block;touch-action:none;max-width:100%;max-height:100%}
+
+  /* ===== JOYSTICK COLUMN (KANAN) ===== */
+  #joyCol{width:150px;background:#f8e8f5;border:2px solid #dcbedc;
+    border-radius:16px;display:flex;flex-direction:column;align-items:center;
+    padding:8px;gap:8px;flex-shrink:0}
+  #joyCol > p{color:#7d5aaa;font-size:10px;font-weight:700;letter-spacing:1px}
+  #joy{width:120px;height:120px;border-radius:50%;background:#fff;
+    border:5px solid #dcbedc;position:relative;touch-action:none;
+    box-shadow:inset 0 0 12px rgba(180,145,225,.25)}
+  #knob{width:46px;height:46px;border-radius:50%;background:#ff91b9;
     border:3px solid #e664a0;position:absolute;left:50%;top:50%;
-    transform:translate(-50%,-50%);pointer-events:none}
-  #joyLabel{color:#7d5aaa;font-size:11px;font-weight:700;letter-spacing:1px;
-    writing-mode:vertical-rl;text-orientation:mixed}
-  #buttons{display:flex;gap:8px;margin-top:4px}
-  #buttons button{background:#b491e1;color:#fff;border:none;border-radius:12px;
-    padding:8px 18px;font-weight:700;font-size:13px;box-shadow:0 3px 0 #7d5aaa}
-  #buttons button:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
+    transform:translate(-50%,-50%);pointer-events:none;
+    box-shadow:inset -3px -3px 8px rgba(255,255,255,.5)}
+  #joyBtns{display:flex;flex-direction:column;gap:6px;width:100%;margin-top:auto}
+  #joyBtns button{width:100%;background:#b491e1;color:#fff;border:none;
+    border-radius:10px;padding:9px 6px;font-weight:700;font-size:12px;
+    box-shadow:0 3px 0 #7d5aaa;cursor:pointer}
+  #joyBtns button:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
+
+  /* ===== OVERLAY GAME OVER ===== */
   #overlay{position:fixed;inset:0;background:rgba(80,50,90,.88);
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:16px;z-index:10;padding:20px;text-align:center}
   #overlay.hide{display:none}
-  #overlay h1{color:#fff;font-size:28px;line-height:1.2}
+  #overlay h1{color:#fff;font-size:28px;line-height:1.2;text-shadow:2px 2px 0 #7d5aaa}
   #overlay p{color:#ffd;font-size:14px}
   #overlay button{background:#ff91b9;color:#fff;border:none;padding:14px 40px;
     font-size:18px;font-weight:700;border-radius:14px;box-shadow:0 4px 0 #e664a0}
-  @media(max-height:700px){
-    #joy{width:80px;height:80px}
-    #knob{width:32px;height:32px}
+  #overlay button:active{transform:translateY(2px);box-shadow:0 2px 0 #e664a0}
+
+  @media(max-width:520px){
+    #joyCol{width:120px;padding:6px;gap:6px}
+    #joy{width:96px;height:96px;border-width:4px}
+    #knob{width:38px;height:38px}
+    #joyCol > p{font-size:9px}
+  }
+  @media(max-height:640px){
+    #joy{width:84px;height:84px}
+    #knob{width:34px;height:34px}
+    #joyBtns button{padding:7px 4px;font-size:11px}
   }
 </style>
 </head>
 <body>
 
+<!-- ============ LOADING SCREEN ============ -->
+<div id="loader">
+  <div class="berry">🍓</div>
+  <h2>STRAWBERRY SNAKE</h2>
+  <div class="bar"><div id="barFill"></div></div>
+  <div class="pct" id="pctTxt">0%</div>
+</div>
+
+<!-- ============ HEADER ============ -->
 <div id="hdr">
   <h1>🍓 STRAWBERRY SNAKE GAME</h1>
   <div id="stats">
@@ -57,21 +110,23 @@
   </div>
 </div>
 
+<!-- ============ STAGE ============ -->
 <div id="stage">
-  <canvas id="cv"></canvas>
+  <div id="boardWrap"><canvas id="cv"></canvas></div>
 
-  <div id="joyWrap">
-    <div id="joyLabel">JOYSTICK</div>
+  <div id="joyCol">
+    <p>JOYSTICK</p>
     <div id="joy"><div id="knob"></div></div>
-    <div id="buttons">
+    <div id="joyBtns">
       <button id="pauseBtn">PAUSE</button>
       <button id="resetBtn">RESET</button>
     </div>
   </div>
 </div>
 
+<!-- ============ GAME OVER ============ -->
 <div id="overlay" class="hide">
-  <h1 id="ovT">STRAWBERRY SNAKE</h1>
+  <h1 id="ovT">GAME OVER</h1>
   <p id="ovS">Skor: 0</p>
   <button id="ovB">MAIN LAGI</button>
 </div>
@@ -80,20 +135,51 @@
 (function(){
   "use strict";
 
-  var CV = document.getElementById('cv');
+  /* ================= LOADING ================= */
+  var barFill = document.getElementById('barFill');
+  var pctTxt  = document.getElementById('pctTxt');
+  var loader  = document.getElementById('loader');
+  var loaded  = false;
+  var pct     = 0;
+
+  var fakeTimer = setInterval(function(){
+    if (loaded) return;
+    pct += Math.random() * 8 + 2;
+    if (pct > 90) pct = 90;
+    barFill.style.width = pct + '%';
+    pctTxt.textContent = Math.floor(pct) + '%';
+  }, 90);
+
+  function finishLoading(){
+    if (loaded) return;
+    loaded = true;
+    clearInterval(fakeTimer);
+    barFill.style.width = '100%';
+    pctTxt.textContent = '100%';
+    setTimeout(function(){
+      loader.classList.add('hide');
+      // mulai game setelah loader hilang
+      reset();
+      running = true;
+      requestAnimationFrame(loop);
+    }, 400);
+  }
+
+  /* ================= GAME ================= */
+  var CV  = document.getElementById('cv');
   var ctx = CV.getContext('2d');
-  var G = 20;
-  var COLS = 15;
-  var ROWS = 20;
+
+  var G = 20;          // ukuran grid
+  var COLS = 13;       // jumlah kolom
+  var ROWS = 18;       // jumlah baris
   var W = COLS * G;
   var H = ROWS * G;
-  var FOOD_N = 5;
-  var STEP_MS = 180;
 
-  CV.width = W;
+  var FOOD_N   = 5;
+  var STEP_MS  = 180;
+
+  CV.width  = W;
   CV.height = H;
-  CV.style.width = W + 'px';
-  CV.style.height = H + 'px';
 
   var snake, dir, nextDir, foods, score, best;
   var running = false, paused = false, acc = 0, lastT = 0;
@@ -101,6 +187,7 @@
   best = parseInt(localStorage.getItem('ssBest') || '0', 10) || 0;
   document.getElementById('bs').textContent = best;
 
+  // ============ GAMBAR ============
   function drawStrawberry(px, py){
     var cx = px + G/2, cy = py + G/2, r = G * 0.4;
     ctx.fillStyle = '#f04664';
@@ -181,6 +268,7 @@
     }
   }
 
+  // ============ LOGIKA ============
   function randFood(){
     var occupied = {};
     for (var i = 0; i < snake.length; i++) occupied[snake[i].x + ',' + snake[i].y] = 1;
@@ -222,7 +310,6 @@
     paused = false;
     document.getElementById('sc').textContent = '0';
     fillFoods();
-    running = true;
     render();
   }
 
@@ -289,7 +376,7 @@
     requestAnimationFrame(loop);
   }
 
-  // ---- Keyboard ----
+  // ============ KEYBOARD ============
   window.addEventListener('keydown', function(e){
     var k = e.key.toLowerCase();
     if (k === 'arrowup' || k === 'w')    setDir(0, -1);
@@ -300,7 +387,7 @@
     if (['arrowup','arrowdown','arrowleft','arrowright'].indexOf(k) >= 0) e.preventDefault();
   }, {passive:false});
 
-  // ---- Swipe di canvas ----
+  // ============ SWIPE ============
   var sx = 0, sy = 0;
   CV.addEventListener('touchstart', function(e){
     sx = e.touches[0].clientX;
@@ -314,7 +401,7 @@
     else setDir(0, dy > 0 ? 1 : -1);
   }, {passive:true});
 
-  // ---- JOYSTICK ----
+  // ============ JOYSTICK ============
   var joy = document.getElementById('joy');
   var knob = document.getElementById('knob');
   var joyActive = false;
@@ -350,11 +437,9 @@
     }
   }, {passive:false});
   joy.addEventListener('touchend', function(e){
-    joyReset();
-    e.preventDefault();
+    joyReset(); e.preventDefault();
   }, {passive:false});
   joy.addEventListener('touchcancel', joyReset);
-  // mouse (untuk laptop)
   joy.addEventListener('mousedown', function(e){
     joyActive = true;
     joyMove(e.clientX, e.clientY);
@@ -365,22 +450,36 @@
   });
   window.addEventListener('mouseup', function(){ if (joyActive) joyReset(); });
 
-  // ---- Tombol ----
+  // ============ TOMBOL ============
   document.getElementById('pauseBtn').onclick = function(){
     if (running) paused = !paused;
   };
   document.getElementById('resetBtn').onclick = function(){
     document.getElementById('overlay').classList.add('hide');
     reset();
+    running = true;
   };
   document.getElementById('ovB').onclick = function(){
     document.getElementById('overlay').classList.add('hide');
     reset();
+    running = true;
   };
 
-  // ---- Start ----
-  reset();
-  requestAnimationFrame(loop);
+  /* ================= START LOADING ================= */
+  // kalau semua asset sudah siap, selesaikan loading
+  if (document.readyState === 'complete') {
+    setTimeout(finishLoading, 700);
+  } else {
+    window.addEventListener('load', function(){
+      setTimeout(finishLoading, 700);
+    });
+    // safety: kalau load tidak terpanggil dalam 3.5 detik, paksa selesai
+    setTimeout(finishLoading, 3500);
+  }
+
+  // gambar awal papan (kosong) sambil loading
+  ctx.fillStyle = '#fffafd';
+  ctx.fillRect(0, 0, W, H);
 })();
 </script>
 </body>
