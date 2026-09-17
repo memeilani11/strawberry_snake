@@ -7,7 +7,7 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%;overflow:hidden;background:#f4ecfa;
-    font-family:system-ui,sans-serif;user-select:none}
+    font-family:system-ui,-apple-system,sans-serif;user-select:none}
 
   /* ===== LOADING SCREEN ===== */
   #loader{
@@ -20,7 +20,7 @@
   #loader .berry{font-size:72px;animation:spin 1.6s linear infinite;
     filter:drop-shadow(0 6px 12px rgba(230,100,160,.4))}
   #loader h2{color:#7d5aaa;font-size:18px;letter-spacing:2px;text-align:center;
-    padding:0 20px}
+    padding:0 20px;font-weight:800}
   #loader .bar{width:240px;height:12px;background:#fff;border:2px solid #dcbedc;
     border-radius:10px;overflow:hidden}
   #loader .bar > div{height:100%;width:0%;border-radius:10px;
@@ -33,35 +33,95 @@
     100%{transform:rotate(360deg) scale(1)}
   }
 
-  /* ===== HEADER ===== */
-  #hdr{background:#ffe1ee;padding:6px 4px;text-align:center}
-  #hdr h1{color:#7d5aaa;font-size:14px;margin-bottom:4px;line-height:1.2;
-    letter-spacing:.5px}
-  #stats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-  .st{background:#fff;border:2px solid #b491e1;border-radius:8px;
-    padding:3px 10px;font-size:12px;color:#7d5aaa;font-weight:700}
-  .st span{color:#e664a0}
+  /* ===== HEADER BARU (LEBIH MENARIK) ===== */
+  #hdr{
+    background:linear-gradient(135deg,#ffd6e7 0%,#ffe9f3 40%,#e8d9f8 100%);
+    padding:8px 10px 10px;
+    border-bottom:3px solid #ff91b9;
+    box-shadow:0 4px 12px rgba(230,100,160,.18);
+    position:relative;
+    overflow:hidden;
+  }
+  #hdr::before{
+    content:"";
+    position:absolute;top:-30px;right:-30px;
+    width:90px;height:90px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,145,185,.35),transparent 70%);
+    pointer-events:none;
+  }
+  #hdr::after{
+    content:"";
+    position:absolute;bottom:-40px;left:-20px;
+    width:100px;height:100px;border-radius:50%;
+    background:radial-gradient(circle,rgba(180,145,225,.3),transparent 70%);
+    pointer-events:none;
+  }
+  #titleRow{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    margin-bottom:6px;position:relative;z-index:1;
+  }
+  #titleRow .icon{
+    font-size:20px;
+    animation:bounce 1.8s ease-in-out infinite;
+    filter:drop-shadow(0 2px 4px rgba(230,100,160,.4));
+  }
+  #titleRow .icon:nth-child(3){animation-delay:.3s}
+  #titleRow h1{
+    color:#7d5aaa;font-size:14px;font-weight:800;
+    letter-spacing:.8px;text-align:center;line-height:1.15;
+    text-shadow:0 1px 0 #fff,0 2px 3px rgba(180,145,225,.2);
+  }
+  @keyframes bounce{
+    0%,100%{transform:translateY(0) rotate(-5deg)}
+    50%{transform:translateY(-5px) rotate(5deg)}
+  }
+  #stats{
+    display:flex;gap:6px;justify-content:center;flex-wrap:wrap;
+    position:relative;z-index:1;
+  }
+  .st{
+    background:linear-gradient(180deg,#ffffff,#fff5fa);
+    border:2px solid #ff91b9;
+    border-radius:20px;
+    padding:4px 10px 4px 6px;
+    font-size:11px;color:#7d5aaa;font-weight:800;
+    display:flex;align-items:center;gap:5px;
+    box-shadow:0 2px 0 #e664a0,0 3px 6px rgba(230,100,160,.15);
+    letter-spacing:.3px;
+  }
+  .st .ic{
+    font-size:12px;
+    background:#ffe1ee;border-radius:50%;
+    width:18px;height:18px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 -1px 0 rgba(230,100,160,.3);
+  }
+  .st span.val{color:#e664a0;font-weight:900}
+  .st.best{
+    background:linear-gradient(180deg,#fff9e6,#fff3cc);
+    border-color:#ffd166;
+    box-shadow:0 2px 0 #e6b800,0 3px 6px rgba(230,180,0,.15);
+  }
+  .st.best .ic{background:#ffeaa0}
+  .st.best span.val{color:#c9930a}
 
-  /* ===== STAGE (VERTIKAL) ===== */
+  /* ===== STAGE ===== */
   #stage{display:flex;flex-direction:column;align-items:center;
-    gap:6px;padding:6px;height:calc(100% - 60px);min-height:0}
+    gap:6px;padding:6px;height:calc(100% - 68px);min-height:0}
   #boardWrap{flex:1;display:flex;align-items:center;justify-content:center;
     min-height:0;width:100%;padding:0 4px}
   canvas{background:#fffafd;border:3px solid #ff91b9;border-radius:12px;
-    display:block;touch-action:none;max-width:100%;max-height:100%}
+    display:block;touch-action:none;max-width:100%;max-height:100%;
+    box-shadow:0 4px 14px rgba(230,100,160,.18)}
 
-  /* ===== BARIS BAWAH: TOMBOL (KIRI) + JOYSTICK (KANAN) ===== */
+  /* ===== BARIS BAWAH ===== */
   #bottomRow{display:flex;gap:10px;align-items:center;justify-content:space-between;
     width:100%;flex-shrink:0;padding:0 8px}
-
-  /* Tombol PAUSE & RESET di kiri */
   #btnCol{display:flex;flex-direction:column;gap:8px}
   #btnCol button{background:#b491e1;color:#fff;border:none;border-radius:12px;
     padding:14px 26px;font-weight:700;font-size:14px;
     box-shadow:0 3px 0 #7d5aaa;cursor:pointer;min-width:120px}
   #btnCol button:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
-
-  /* Joystick di kanan — DIPERBESAR */
   #joyWrap{background:#f8e8f5;border:2px solid #dcbedc;border-radius:18px;
     padding:10px 14px;display:flex;align-items:center;gap:10px;
     touch-action:none}
@@ -76,21 +136,69 @@
     writing-mode:vertical-rl}
 
   /* ===== OVERLAY GAME OVER ===== */
-  #overlay{position:fixed;inset:0;background:rgba(80,50,90,.88);
+  #overlay{position:fixed;inset:0;background:rgba(80,50,90,.9);
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:16px;z-index:10;padding:20px;text-align:center}
+    gap:14px;z-index:10;padding:24px;text-align:center;
+    backdrop-filter:blur(4px)}
   #overlay.hide{display:none}
-  #overlay h1{color:#fff;font-size:28px;line-height:1.2;text-shadow:2px 2px 0 #7d5aaa}
-  #overlay p{color:#ffd;font-size:14px}
-  #overlay button{background:#ff91b9;color:#fff;border:none;padding:14px 40px;
-    font-size:18px;font-weight:700;border-radius:14px;box-shadow:0 4px 0 #e664a0}
-  #overlay button:active{transform:translateY(2px);box-shadow:0 2px 0 #e664a0}
+  #overlay .goCard{
+    background:linear-gradient(160deg,#fff5fa,#ffe1ee);
+    border:3px solid #ff91b9;border-radius:22px;
+    padding:26px 28px;max-width:340px;width:100%;
+    box-shadow:0 8px 30px rgba(80,50,90,.4);
+    display:flex;flex-direction:column;align-items:center;gap:14px;
+  }
+  #overlay .goBerry{font-size:52px;animation:bounce 1.4s ease-in-out infinite}
+  #overlay h1{color:#7d5aaa;font-size:26px;line-height:1.1;font-weight:900;
+    letter-spacing:1px;text-shadow:0 2px 0 #fff}
+  #overlay .scores{
+    display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:4px;
+  }
+  #overlay .scBox{
+    background:#fff;border:2px solid #b491e1;border-radius:14px;
+    padding:10px 18px;min-width:110px;
+    box-shadow:0 3px 0 rgba(180,145,225,.35);
+  }
+  #overlay .scBox.best{
+    background:linear-gradient(180deg,#fff9e6,#fff3cc);
+    border-color:#ffd166;
+    box-shadow:0 3px 0 #e6b800;
+  }
+  #overlay .scBox .lbl{font-size:10px;color:#7d5aaa;font-weight:800;
+    letter-spacing:1px;margin-bottom:2px}
+  #overlay .scBox .num{font-size:26px;font-weight:900;color:#e664a0}
+  #overlay .scBox.best .lbl{color:#c9930a}
+  #overlay .scBox.best .num{color:#c9930a}
+  #overlay .newBest{
+    background:#ffd166;color:#7d5aaa;font-size:11px;font-weight:800;
+    padding:3px 10px;border-radius:20px;letter-spacing:1px;
+    animation:pulse 1s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.08)}
+  }
+  #overlay .btnRow{display:flex;gap:10px;margin-top:6px;width:100%}
+  #overlay button{
+    flex:1;
+    color:#fff;border:none;padding:13px 8px;
+    font-size:15px;font-weight:800;border-radius:14px;
+    cursor:pointer;letter-spacing:.5px;
+  }
+  #ovAgain{background:#ff91b9;box-shadow:0 4px 0 #e664a0}
+  #ovAgain:active{transform:translateY(2px);box-shadow:0 2px 0 #e664a0}
+  #ovQuit{background:#b491e1;box-shadow:0 4px 0 #7d5aaa}
+  #ovQuit:active{transform:translateY(2px);box-shadow:0 2px 0 #7d5aaa}
 
   @media(max-width:380px){
     #joy{width:110px;height:110px;border-width:5px}
     #knob{width:48px;height:48px}
     #btnCol button{padding:12px 18px;font-size:13px;min-width:100px}
     #joyLabel{font-size:10px}
+    #titleRow h1{font-size:12px}
+    #overlay h1{font-size:22px}
+    #overlay .scBox{padding:8px 14px;min-width:100px}
+    #overlay .scBox .num{font-size:22px}
   }
   @media(max-height:700px){
     #joy{width:110px;height:110px}
@@ -101,7 +209,7 @@
 </head>
 <body>
 
-<!-- ============ LOADING SCREEN ============ -->
+<!-- ============ LOADING ============ -->
 <div id="loader">
   <div class="berry">🍓</div>
   <h2>MEME STRAWBERRY SNAKE GAME</h2>
@@ -109,13 +217,26 @@
   <div class="pct" id="pctTxt">0%</div>
 </div>
 
-<!-- ============ HEADER ============ -->
+<!-- ============ HEADER BARU ============ -->
 <div id="hdr">
-  <h1>🍓 MEME STRAWBERRY SNAKE GAME</h1>
+  <div id="titleRow">
+    <span class="icon">🍓</span>
+    <h1>MEME STRAWBERRY SNAKE GAME</h1>
+    <span class="icon">🐍</span>
+  </div>
   <div id="stats">
-    <div class="st">SCORE <span id="sc">0</span></div>
-    <div class="st">BEST <span id="bs">0</span></div>
-    <div class="st">FOOD <span id="fd">10</span></div>
+    <div class="st">
+      <span class="ic">🎯</span>
+      SCORE <span class="val" id="sc">0</span>
+    </div>
+    <div class="st best">
+      <span class="ic">🏆</span>
+      BEST <span class="val" id="bs">0</span>
+    </div>
+    <div class="st">
+      <span class="ic">🍓</span>
+      FOOD <span class="val" id="fd">10</span>
+    </div>
   </div>
 </div>
 
@@ -123,7 +244,6 @@
 <div id="stage">
   <div id="boardWrap"><canvas id="cv"></canvas></div>
 
-  <!-- Tombol (kiri) + Joystick (kanan) -->
   <div id="bottomRow">
     <div id="btnCol">
       <button id="pauseBtn">PAUSE</button>
@@ -139,9 +259,25 @@
 
 <!-- ============ GAME OVER ============ -->
 <div id="overlay" class="hide">
-  <h1 id="ovT">GAME OVER</h1>
-  <p id="ovS">Skor: 0</p>
-  <button id="ovB">MAIN LAGI</button>
+  <div class="goCard">
+    <div class="goBerry">🍓</div>
+    <h1>GAME OVER</h1>
+    <div class="scores">
+      <div class="scBox">
+        <div class="lbl">SKOR</div>
+        <div class="num" id="ovScore">0</div>
+      </div>
+      <div class="scBox best">
+        <div class="lbl">🏆 BEST</div>
+        <div class="num" id="ovBest">0</div>
+      </div>
+    </div>
+    <div class="newBest" id="newBest" style="display:none">✨ REKOR BARU! ✨</div>
+    <div class="btnRow">
+      <button id="ovAgain">MAINKAN LAGI</button>
+      <button id="ovQuit">KELUAR</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -181,12 +317,11 @@
   var CV  = document.getElementById('cv');
   var ctx = CV.getContext('2d');
 
-  // Papan LEBIH BESAR: 24 kolom x 26 baris, kotak 16px → 384 x 416
   var G = 16;
   var COLS = 24;
   var ROWS = 26;
-  var W = COLS * G;   // 384
-  var H = ROWS * G;   // 416
+  var W = COLS * G;
+  var H = ROWS * G;
 
   var FOOD_N  = 10;
   var STEP_MS = 180;
@@ -194,7 +329,7 @@
   CV.width  = W;
   CV.height = H;
 
-  var snake, dir, nextDir, foods, score, best;
+  var snake, dir, nextDir, foods, score, best, isNewBest;
   var running = false, paused = false, acc = 0, lastT = 0;
 
   best = parseInt(localStorage.getItem('ssBest') || '0', 10) || 0;
@@ -228,13 +363,11 @@
   function drawHead(px, py){
     ctx.fillStyle = '#ff91b9';
     ctx.fillRect(px+1, py+1, G-2, G-2);
-
     var e1x, e1y, e2x, e2y;
     if (dir.x === 1)       { e1x = px+G*0.68; e1y = py+G*0.35; e2x = px+G*0.68; e2y = py+G*0.65; }
     else if (dir.x === -1) { e1x = px+G*0.32; e1y = py+G*0.35; e2x = px+G*0.32; e2y = py+G*0.65; }
     else if (dir.y === -1) { e1x = px+G*0.35; e1y = py+G*0.32; e2x = px+G*0.65; e2y = py+G*0.32; }
     else                   { e1x = px+G*0.35; e1y = py+G*0.68; e2x = px+G*0.65; e2y = py+G*0.68; }
-
     ctx.fillStyle = '#fff';
     ctx.beginPath(); ctx.arc(e1x, e1y, G*0.13, 0, Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(e2x, e2y, G*0.13, 0, Math.PI*2); ctx.fill();
@@ -246,7 +379,6 @@
   function render(){
     ctx.fillStyle = '#fffafd';
     ctx.fillRect(0, 0, W, H);
-
     ctx.strokeStyle = '#eee1ed';
     ctx.lineWidth = 1;
     for (var x = 0; x <= COLS; x++) {
@@ -255,21 +387,15 @@
     for (var y = 0; y <= ROWS; y++) {
       ctx.beginPath(); ctx.moveTo(0, y*G); ctx.lineTo(W, y*G); ctx.stroke();
     }
-
-    for (var i = 0; i < foods.length; i++) {
-      drawStrawberry(foods[i].x * G, foods[i].y * G);
-    }
-
+    for (var i = 0; i < foods.length; i++) drawStrawberry(foods[i].x * G, foods[i].y * G);
     for (var j = 0; j < snake.length; j++) {
       var s = snake[j];
-      if (j === 0) {
-        drawHead(s.x * G, s.y * G);
-      } else {
+      if (j === 0) drawHead(s.x * G, s.y * G);
+      else {
         ctx.fillStyle = j % 2 === 0 ? '#ffe1ee' : '#ebdcfa';
         ctx.fillRect(s.x*G + 1, s.y*G + 1, G - 2, G - 2);
       }
     }
-
     if (paused) {
       ctx.fillStyle = 'rgba(80,50,90,.55)';
       ctx.fillRect(0, 0, W, H);
@@ -287,11 +413,8 @@
     for (var i = 0; i < snake.length; i++) occupied[snake[i].x + ',' + snake[i].y] = 1;
     for (var k = 0; k < foods.length; k++) occupied[foods[k].x + ',' + foods[k].y] = 1;
     var free = [];
-    for (var x = 0; x < COLS; x++) {
-      for (var y = 0; y < ROWS; y++) {
-        if (!occupied[x + ',' + y]) free.push({x:x, y:y});
-      }
-    }
+    for (var x = 0; x < COLS; x++) for (var y = 0; y < ROWS; y++)
+      if (!occupied[x + ',' + y]) free.push({x:x, y:y});
     if (!free.length) return null;
     return free[Math.floor(Math.random() * free.length)];
   }
@@ -310,17 +433,11 @@
     var cx = Math.floor(COLS / 2);
     var cy = Math.floor(ROWS / 2);
     snake = [
-      {x: cx,     y: cy},
-      {x: cx - 1, y: cy},
-      {x: cx - 2, y: cy},
-      {x: cx - 3, y: cy}
+      {x: cx, y: cy}, {x: cx - 1, y: cy},
+      {x: cx - 2, y: cy}, {x: cx - 3, y: cy}
     ];
-    dir = {x:1, y:0};
-    nextDir = {x:1, y:0};
-    foods = [];
-    score = 0;
-    acc = 0;
-    paused = false;
+    dir = {x:1, y:0}; nextDir = {x:1, y:0};
+    foods = []; score = 0; acc = 0; paused = false; isNewBest = false;
     document.getElementById('sc').textContent = '0';
     fillFoods();
     render();
@@ -334,28 +451,22 @@
   function tick(){
     dir = nextDir;
     var head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-
-    if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
-      return gameOver();
-    }
-    for (var i = 0; i < snake.length - 1; i++) {
+    if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) return gameOver();
+    for (var i = 0; i < snake.length - 1; i++)
       if (snake[i].x === head.x && snake[i].y === head.y) return gameOver();
-    }
 
     snake.unshift(head);
     var eaten = false;
     for (var k = 0; k < foods.length; k++) {
       if (foods[k].x === head.x && foods[k].y === head.y) {
-        foods.splice(k, 1);
-        eaten = true;
-        break;
+        foods.splice(k, 1); eaten = true; break;
       }
     }
     if (eaten) {
       score++;
       document.getElementById('sc').textContent = score;
       if (score > best) {
-        best = score;
+        best = score; isNewBest = true;
         localStorage.setItem('ssBest', String(best));
         document.getElementById('bs').textContent = best;
       }
@@ -367,23 +478,20 @@
 
   function gameOver(){
     running = false;
-    document.getElementById('ovT').textContent = 'GAME OVER';
-    document.getElementById('ovS').textContent = 'Skor: ' + score + ' | Best: ' + best;
+    document.getElementById('ovScore').textContent = score;
+    document.getElementById('ovBest').textContent = best;
+    document.getElementById('newBest').style.display = isNewBest ? 'block' : 'none';
     document.getElementById('overlay').classList.remove('hide');
   }
 
   function loop(t){
     if (!lastT) lastT = t;
-    var dt = t - lastT;
-    lastT = t;
+    var dt = t - lastT; lastT = t;
     if (dt > 250) dt = 250;
     if (running && !paused) {
       acc += dt;
       var guard = 0;
-      while (acc >= STEP_MS && guard++ < 5) {
-        acc -= STEP_MS;
-        tick();
-      }
+      while (acc >= STEP_MS && guard++ < 5) { acc -= STEP_MS; tick(); }
     }
     render();
     requestAnimationFrame(loop);
@@ -403,8 +511,7 @@
   // ============ SWIPE ============
   var sx = 0, sy = 0;
   CV.addEventListener('touchstart', function(e){
-    sx = e.touches[0].clientX;
-    sy = e.touches[0].clientY;
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY;
   }, {passive:true});
   CV.addEventListener('touchend', function(e){
     var dx = e.changedTouches[0].clientX - sx;
@@ -414,7 +521,7 @@
     else setDir(0, dy > 0 ? 1 : -1);
   }, {passive:true});
 
-  // ============ JOYSTICK (diperbesar) ============
+  // ============ JOYSTICK ============
   var joy = document.getElementById('joy');
   var knob = document.getElementById('knob');
   var joyActive = false;
@@ -423,8 +530,7 @@
     var r = joy.getBoundingClientRect();
     var cx = r.left + r.width / 2;
     var cy = r.top + r.height / 2;
-    var dx = clientX - cx;
-    var dy = clientY - cy;
+    var dx = clientX - cx, dy = clientY - cy;
     var maxR = r.width / 2 - 24;
     var d = Math.sqrt(dx*dx + dy*dy);
     if (d > maxR) { dx = dx / d * maxR; dy = dy / d * maxR; }
@@ -439,24 +545,16 @@
   }
 
   joy.addEventListener('touchstart', function(e){
-    joyActive = true;
-    joyMove(e.touches[0].clientX, e.touches[0].clientY);
+    joyActive = true; joyMove(e.touches[0].clientX, e.touches[0].clientY);
     e.preventDefault();
   }, {passive:false});
   joy.addEventListener('touchmove', function(e){
-    if (joyActive) {
-      joyMove(e.touches[0].clientX, e.touches[0].clientY);
-      e.preventDefault();
-    }
+    if (joyActive) { joyMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }
   }, {passive:false});
-  joy.addEventListener('touchend', function(e){
-    joyReset(); e.preventDefault();
-  }, {passive:false});
+  joy.addEventListener('touchend', function(e){ joyReset(); e.preventDefault(); }, {passive:false});
   joy.addEventListener('touchcancel', joyReset);
   joy.addEventListener('mousedown', function(e){
-    joyActive = true;
-    joyMove(e.clientX, e.clientY);
-    e.preventDefault();
+    joyActive = true; joyMove(e.clientX, e.clientY); e.preventDefault();
   });
   window.addEventListener('mousemove', function(e){
     if (joyActive) joyMove(e.clientX, e.clientY);
@@ -469,22 +567,42 @@
   };
   document.getElementById('resetBtn').onclick = function(){
     document.getElementById('overlay').classList.add('hide');
-    reset();
-    running = true;
-  };
-  document.getElementById('ovB').onclick = function(){
-    document.getElementById('overlay').classList.add('hide');
-    reset();
-    running = true;
+    reset(); running = true;
   };
 
-  /* ================= START LOADING ================= */
+  // Tombol MAIN LAGI
+  document.getElementById('ovAgain').onclick = function(){
+    document.getElementById('overlay').classList.add('hide');
+    reset(); running = true;
+  };
+
+  // Tombol KELUAR
+  document.getElementById('ovQuit').onclick = function(){
+    // coba tutup tab
+    window.open('', '_self', '');
+    window.close();
+    // fallback: kalau tidak bisa ditutup, tampilkan halaman "terima kasih"
+    setTimeout(function(){
+      document.body.innerHTML =
+        '<div style="height:100vh;display:flex;align-items:center;' +
+        'justify-content:center;flex-direction:column;gap:14px;' +
+        'background:linear-gradient(160deg,#ffe1ee,#f4ecfa 60%,#ebdcfa);' +
+        'font-family:system-ui,sans-serif;color:#7d5aaa;text-align:center;' +
+        'padding:20px">' +
+        '<div style="font-size:72px">🍓</div>' +
+        '<h1 style="font-size:22px;letter-spacing:1px">TERIMA KASIH SUDAH MAIN!</h1>' +
+        '<p style="color:#e664a0;font-weight:700">Skor terbaikmu: ' + best + '</p>' +
+        '<p style="font-size:13px;color:#a08bb8">Tutup tab ini atau ' +
+        'buka lagi untuk main kembali.</p>' +
+        '</div>';
+    }, 100);
+  };
+
+  /* ================= START ================= */
   if (document.readyState === 'complete') {
     setTimeout(finishLoading, 700);
   } else {
-    window.addEventListener('load', function(){
-      setTimeout(finishLoading, 700);
-    });
+    window.addEventListener('load', function(){ setTimeout(finishLoading, 700); });
     setTimeout(finishLoading, 3500);
   }
 
