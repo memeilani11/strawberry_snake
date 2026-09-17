@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Strawberry Snake</title>
+<title>Meme Strawberry Snake Game</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%;overflow:hidden;background:#f4ecfa;
@@ -17,15 +17,16 @@
     transition:opacity .5s ease, visibility .5s ease;
   }
   #loader.hide{opacity:0;visibility:hidden}
-  #loader .berry{font-size:64px;animation:spin 1.6s linear infinite;
+  #loader .berry{font-size:72px;animation:spin 1.6s linear infinite;
     filter:drop-shadow(0 6px 12px rgba(230,100,160,.4))}
-  #loader h2{color:#7d5aaa;font-size:20px;letter-spacing:2px}
-  #loader .bar{width:220px;height:10px;background:#fff;border:2px solid #dcbedc;
+  #loader h2{color:#7d5aaa;font-size:18px;letter-spacing:2px;text-align:center;
+    padding:0 20px}
+  #loader .bar{width:240px;height:12px;background:#fff;border:2px solid #dcbedc;
     border-radius:10px;overflow:hidden}
   #loader .bar > div{height:100%;width:0%;border-radius:10px;
     background:linear-gradient(90deg,#ff91b9,#b491e1);
     transition:width .25s ease}
-  #loader .pct{color:#e664a0;font-size:13px;font-weight:700}
+  #loader .pct{color:#e664a0;font-size:14px;font-weight:700}
   @keyframes spin{
     0%{transform:rotate(0) scale(1)}
     50%{transform:rotate(180deg) scale(1.15)}
@@ -33,8 +34,9 @@
   }
 
   /* ===== HEADER ===== */
-  #hdr{background:#ffe1ee;padding:6px;text-align:center}
-  #hdr h1{color:#7d5aaa;font-size:15px;margin-bottom:4px}
+  #hdr{background:#ffe1ee;padding:6px 4px;text-align:center}
+  #hdr h1{color:#7d5aaa;font-size:14px;margin-bottom:4px;line-height:1.2;
+    letter-spacing:.5px}
   #stats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
   .st{background:#fff;border:2px solid #b491e1;border-radius:8px;
     padding:3px 10px;font-size:12px;color:#7d5aaa;font-weight:700}
@@ -42,7 +44,7 @@
 
   /* ===== STAGE (VERTIKAL) ===== */
   #stage{display:flex;flex-direction:column;align-items:center;
-    gap:6px;padding:6px;height:calc(100% - 62px);min-height:0}
+    gap:6px;padding:6px;height:calc(100% - 60px);min-height:0}
   #boardWrap{flex:1;display:flex;align-items:center;justify-content:center;
     min-height:0;width:100%;padding:0 4px}
   canvas{background:#fffafd;border:3px solid #ff91b9;border-radius:12px;
@@ -55,22 +57,22 @@
   /* Tombol PAUSE & RESET di kiri */
   #btnCol{display:flex;flex-direction:column;gap:8px}
   #btnCol button{background:#b491e1;color:#fff;border:none;border-radius:12px;
-    padding:12px 24px;font-weight:700;font-size:14px;
-    box-shadow:0 3px 0 #7d5aaa;cursor:pointer;min-width:110px}
+    padding:14px 26px;font-weight:700;font-size:14px;
+    box-shadow:0 3px 0 #7d5aaa;cursor:pointer;min-width:120px}
   #btnCol button:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
 
-  /* Joystick di kanan */
-  #joyWrap{background:#f8e8f5;border:2px solid #dcbedc;border-radius:16px;
-    padding:8px 12px;display:flex;align-items:center;gap:8px;
+  /* Joystick di kanan — DIPERBESAR */
+  #joyWrap{background:#f8e8f5;border:2px solid #dcbedc;border-radius:18px;
+    padding:10px 14px;display:flex;align-items:center;gap:10px;
     touch-action:none}
-  #joy{width:100px;height:100px;border-radius:50%;background:#fff;
-    border:5px solid #dcbedc;position:relative;touch-action:none;
-    box-shadow:inset 0 0 12px rgba(180,145,225,.25)}
-  #knob{width:42px;height:42px;border-radius:50%;background:#ff91b9;
-    border:3px solid #e664a0;position:absolute;left:50%;top:50%;
+  #joy{width:130px;height:130px;border-radius:50%;background:#fff;
+    border:6px solid #dcbedc;position:relative;touch-action:none;
+    box-shadow:inset 0 0 14px rgba(180,145,225,.3)}
+  #knob{width:56px;height:56px;border-radius:50%;background:#ff91b9;
+    border:4px solid #e664a0;position:absolute;left:50%;top:50%;
     transform:translate(-50%,-50%);pointer-events:none;
-    box-shadow:inset -3px -3px 8px rgba(255,255,255,.5)}
-  #joyLabel{color:#7d5aaa;font-size:10px;font-weight:700;letter-spacing:1px;
+    box-shadow:inset -4px -4px 10px rgba(255,255,255,.5)}
+  #joyLabel{color:#7d5aaa;font-size:11px;font-weight:700;letter-spacing:1px;
     writing-mode:vertical-rl}
 
   /* ===== OVERLAY GAME OVER ===== */
@@ -85,14 +87,15 @@
   #overlay button:active{transform:translateY(2px);box-shadow:0 2px 0 #e664a0}
 
   @media(max-width:380px){
-    #joy{width:84px;height:84px}
-    #knob{width:36px;height:36px}
-    #btnCol button{padding:10px 16px;font-size:13px;min-width:90px}
+    #joy{width:110px;height:110px;border-width:5px}
+    #knob{width:48px;height:48px}
+    #btnCol button{padding:12px 18px;font-size:13px;min-width:100px}
+    #joyLabel{font-size:10px}
   }
-  @media(max-height:640px){
-    #joy{width:84px;height:84px}
-    #knob{width:34px;height:34px}
-    #btnCol button{padding:8px 16px;font-size:12px}
+  @media(max-height:700px){
+    #joy{width:110px;height:110px}
+    #knob{width:48px;height:48px}
+    #btnCol button{padding:10px 18px;font-size:13px}
   }
 </style>
 </head>
@@ -101,18 +104,18 @@
 <!-- ============ LOADING SCREEN ============ -->
 <div id="loader">
   <div class="berry">🍓</div>
-  <h2>STRAWBERRY SNAKE</h2>
+  <h2>MEME STRAWBERRY SNAKE GAME</h2>
   <div class="bar"><div id="barFill"></div></div>
   <div class="pct" id="pctTxt">0%</div>
 </div>
 
 <!-- ============ HEADER ============ -->
 <div id="hdr">
-  <h1>🍓 STRAWBERRY SNAKE GAME</h1>
+  <h1>🍓 MEME STRAWBERRY SNAKE GAME</h1>
   <div id="stats">
     <div class="st">SCORE <span id="sc">0</span></div>
     <div class="st">BEST <span id="bs">0</span></div>
-    <div class="st">FOOD <span id="fd">8</span></div>
+    <div class="st">FOOD <span id="fd">10</span></div>
   </div>
 </div>
 
@@ -178,14 +181,14 @@
   var CV  = document.getElementById('cv');
   var ctx = CV.getContext('2d');
 
-  // Papan lebih lebar: 20 kolom x 22 baris, kotak 16px → 320x352
+  // Papan LEBIH BESAR: 24 kolom x 26 baris, kotak 16px → 384 x 416
   var G = 16;
-  var COLS = 20;
-  var ROWS = 22;
-  var W = COLS * G;   // 320
-  var H = ROWS * G;   // 352
+  var COLS = 24;
+  var ROWS = 26;
+  var W = COLS * G;   // 384
+  var H = ROWS * G;   // 416
 
-  var FOOD_N  = 8;    // makanan ditambah karena papan lebih luas
+  var FOOD_N  = 10;
   var STEP_MS = 180;
 
   CV.width  = W;
@@ -295,7 +298,7 @@
 
   function fillFoods(){
     var guard = 0;
-    while (foods.length < FOOD_N && guard++ < 500) {
+    while (foods.length < FOOD_N && guard++ < 600) {
       var f = randFood();
       if (!f) break;
       foods.push(f);
@@ -411,7 +414,7 @@
     else setDir(0, dy > 0 ? 1 : -1);
   }, {passive:true});
 
-  // ============ JOYSTICK ============
+  // ============ JOYSTICK (diperbesar) ============
   var joy = document.getElementById('joy');
   var knob = document.getElementById('knob');
   var joyActive = false;
@@ -422,11 +425,11 @@
     var cy = r.top + r.height / 2;
     var dx = clientX - cx;
     var dy = clientY - cy;
-    var maxR = r.width / 2 - 18;
+    var maxR = r.width / 2 - 24;
     var d = Math.sqrt(dx*dx + dy*dy);
     if (d > maxR) { dx = dx / d * maxR; dy = dy / d * maxR; }
     knob.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
-    if (d < 10) return;
+    if (d < 12) return;
     if (Math.abs(dx) > Math.abs(dy)) setDir(dx > 0 ? 1 : -1, 0);
     else setDir(0, dy > 0 ? 1 : -1);
   }
