@@ -33,7 +33,7 @@
     100%{transform:rotate(360deg) scale(1)}
   }
 
-  /* ===== HEADER BARU (LEBIH MENARIK) ===== */
+  /* ===== HEADER ===== */
   #hdr{
     background:linear-gradient(135deg,#ffd6e7 0%,#ffe9f3 40%,#e8d9f8 100%);
     padding:8px 10px 10px;
@@ -115,13 +115,28 @@
     box-shadow:0 4px 14px rgba(230,100,160,.18)}
 
   /* ===== BARIS BAWAH ===== */
-  #bottomRow{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  #bottomRow{display:flex;gap:8px;align-items:center;justify-content:space-between;
     width:100%;flex-shrink:0;padding:0 8px}
-  #btnCol{display:flex;flex-direction:column;gap:8px}
+
+  /* Kolom tombol kiri */
+  #btnCol{display:flex;flex-direction:column;gap:6px;flex:1;max-width:180px}
   #btnCol button{background:#b491e1;color:#fff;border:none;border-radius:12px;
-    padding:14px 26px;font-weight:700;font-size:14px;
-    box-shadow:0 3px 0 #7d5aaa;cursor:pointer;min-width:120px}
+    padding:11px 10px;font-weight:800;font-size:13px;
+    box-shadow:0 3px 0 #7d5aaa;cursor:pointer;letter-spacing:.5px}
   #btnCol button:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
+
+  /* Tombol SPEED */
+  #speedBtn{
+    background:linear-gradient(180deg,#ffd166,#ffb830) !important;
+    color:#7d5aaa !important;
+    box-shadow:0 3px 0 #c9930a !important;
+    display:flex;align-items:center;justify-content:center;gap:4px;
+  }
+  #speedBtn:active{box-shadow:0 1px 0 #c9930a !important}
+  #speedBtn .speedIcon{font-size:14px}
+  #speedBtn .speedVal{font-size:12px;font-weight:900}
+
+  /* Joystick kanan */
   #joyWrap{background:#f8e8f5;border:2px solid #dcbedc;border-radius:18px;
     padding:10px 14px;display:flex;align-items:center;gap:10px;
     touch-action:none}
@@ -190,10 +205,47 @@
   #ovQuit{background:#b491e1;box-shadow:0 4px 0 #7d5aaa}
   #ovQuit:active{transform:translateY(2px);box-shadow:0 2px 0 #7d5aaa}
 
+  /* ===== OVERLAY SPEED PICKER ===== */
+  #speedOverlay{position:fixed;inset:0;background:rgba(80,50,90,.88);
+    display:flex;align-items:center;justify-content:center;
+    z-index:20;padding:24px;backdrop-filter:blur(4px)}
+  #speedOverlay.hide{display:none}
+  #speedOverlay .speedCard{
+    background:linear-gradient(160deg,#fff5fa,#ffe1ee);
+    border:3px solid #ff91b9;border-radius:22px;
+    padding:22px;max-width:320px;width:100%;
+    box-shadow:0 8px 30px rgba(80,50,90,.4);
+    display:flex;flex-direction:column;gap:12px;text-align:center;
+  }
+  #speedOverlay h2{color:#7d5aaa;font-size:20px;font-weight:900;
+    letter-spacing:1px;margin-bottom:4px}
+  #speedOverlay .speedOpt{
+    background:#fff;border:2px solid #dcbedc;border-radius:14px;
+    padding:14px;font-size:16px;font-weight:800;color:#7d5aaa;
+    cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+    transition:all .15s ease;
+  }
+  #speedOverlay .speedOpt:hover{border-color:#b491e1}
+  #speedOverlay .speedOpt.active{
+    background:linear-gradient(180deg,#ffd166,#ffb830);
+    border-color:#c9930a;color:#7d5aaa;
+    box-shadow:0 3px 0 #c9930a;
+  }
+  #speedOverlay .speedOpt .em{font-size:20px}
+  #speedOverlay .speedOpt .lbl{flex:1;text-align:left;margin-left:10px}
+  #speedOverlay .speedOpt .desc{font-size:11px;color:#a08bb8;font-weight:600}
+  #speedOverlay .speedOpt.active .desc{color:#7d5aaa}
+  #speedOverlay .closeBtn{
+    background:#b491e1;color:#fff;border:none;border-radius:12px;
+    padding:11px;font-weight:800;font-size:14px;cursor:pointer;
+    box-shadow:0 3px 0 #7d5aaa;margin-top:4px;
+  }
+  #speedOverlay .closeBtn:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
+
   @media(max-width:380px){
     #joy{width:110px;height:110px;border-width:5px}
     #knob{width:48px;height:48px}
-    #btnCol button{padding:12px 18px;font-size:13px;min-width:100px}
+    #btnCol button{padding:9px 8px;font-size:12px}
     #joyLabel{font-size:10px}
     #titleRow h1{font-size:12px}
     #overlay h1{font-size:22px}
@@ -203,7 +255,7 @@
   @media(max-height:700px){
     #joy{width:110px;height:110px}
     #knob{width:48px;height:48px}
-    #btnCol button{padding:10px 18px;font-size:13px}
+    #btnCol button{padding:9px 8px;font-size:12px}
   }
 </style>
 </head>
@@ -217,7 +269,7 @@
   <div class="pct" id="pctTxt">0%</div>
 </div>
 
-<!-- ============ HEADER BARU ============ -->
+<!-- ============ HEADER ============ -->
 <div id="hdr">
   <div id="titleRow">
     <span class="icon">🍓</span>
@@ -246,6 +298,10 @@
 
   <div id="bottomRow">
     <div id="btnCol">
+      <button id="speedBtn">
+        <span class="speedIcon">⚡</span>
+        SPEED <span class="speedVal" id="speedVal">SEDANG</span>
+      </button>
       <button id="pauseBtn">PAUSE</button>
       <button id="resetBtn">RESET</button>
     </div>
@@ -277,6 +333,47 @@
       <button id="ovAgain">MAINKAN LAGI</button>
       <button id="ovQuit">KELUAR</button>
     </div>
+  </div>
+</div>
+
+<!-- ============ SPEED PICKER ============ -->
+<div id="speedOverlay" class="hide">
+  <div class="speedCard">
+    <h2>⚡ PILIH KECEPATAN</h2>
+
+    <div class="speedOpt" data-speed="slow">
+      <span class="em">🐢</span>
+      <div class="lbl">
+        LAMBAT
+        <div class="desc">Santai & santuy</div>
+      </div>
+    </div>
+
+    <div class="speedOpt active" data-speed="normal">
+      <span class="em">🚶</span>
+      <div class="lbl">
+        SEDANG
+        <div class="desc">Standar seimbang</div>
+      </div>
+    </div>
+
+    <div class="speedOpt" data-speed="fast">
+      <span class="em">⚡</span>
+      <div class="lbl">
+        CEPAT
+        <div class="desc">Tantangan seru</div>
+      </div>
+    </div>
+
+    <div class="speedOpt" data-speed="extreme">
+      <span class="em">🔥</span>
+      <div class="lbl">
+        EXTREME
+        <div class="desc">Hanya untuk pemberani</div>
+      </div>
+    </div>
+
+    <button class="closeBtn" id="speedClose">SIMPAN</button>
   </div>
 </div>
 
@@ -324,7 +421,17 @@
   var H = ROWS * G;
 
   var FOOD_N  = 10;
-  var STEP_MS = 180;
+
+  // ====== KECEPATAN ======
+  var SPEEDS = {
+    slow:    { step: 260, label: 'LAMBAT' },
+    normal:  { step: 180, label: 'SEDANG' },
+    fast:    { step: 120, label: 'CEPAT' },
+    extreme: { step: 80,  label: 'EXTREME' }
+  };
+  var speedKey = localStorage.getItem('ssSpeed') || 'normal';
+  if (!SPEEDS[speedKey]) speedKey = 'normal';
+  var STEP_MS = SPEEDS[speedKey].step;
 
   CV.width  = W;
   CV.height = H;
@@ -334,6 +441,16 @@
 
   best = parseInt(localStorage.getItem('ssBest') || '0', 10) || 0;
   document.getElementById('bs').textContent = best;
+  updateSpeedUI();
+
+  function updateSpeedUI(){
+    document.getElementById('speedVal').textContent = SPEEDS[speedKey].label;
+    var opts = document.querySelectorAll('.speedOpt');
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].getAttribute('data-speed') === speedKey) opts[i].classList.add('active');
+      else opts[i].classList.remove('active');
+    }
+  }
 
   // ============ GAMBAR ============
   function drawStrawberry(px, py){
@@ -570,18 +687,14 @@
     reset(); running = true;
   };
 
-  // Tombol MAIN LAGI
   document.getElementById('ovAgain').onclick = function(){
     document.getElementById('overlay').classList.add('hide');
     reset(); running = true;
   };
 
-  // Tombol KELUAR
   document.getElementById('ovQuit').onclick = function(){
-    // coba tutup tab
     window.open('', '_self', '');
     window.close();
-    // fallback: kalau tidak bisa ditutup, tampilkan halaman "terima kasih"
     setTimeout(function(){
       document.body.innerHTML =
         '<div style="height:100vh;display:flex;align-items:center;' +
@@ -597,6 +710,33 @@
         '</div>';
     }, 100);
   };
+
+  // ============ SPEED PICKER ============
+  var speedOverlay = document.getElementById('speedOverlay');
+
+  document.getElementById('speedBtn').onclick = function(){
+    updateSpeedUI();
+    speedOverlay.classList.remove('hide');
+  };
+
+  document.getElementById('speedClose').onclick = function(){
+    speedOverlay.classList.add('hide');
+  };
+
+  var opts = document.querySelectorAll('.speedOpt');
+  for (var i = 0; i < opts.length; i++) {
+    opts[i].onclick = function(){
+      var k = this.getAttribute('data-speed');
+      if (SPEEDS[k]) {
+        speedKey = k;
+        STEP_MS = SPEEDS[k].step;
+        localStorage.setItem('ssSpeed', k);
+        updateSpeedUI();
+        // reset posisi accumulator supaya tidak "skip" langkah
+        acc = 0;
+      }
+    };
+  }
 
   /* ================= START ================= */
   if (document.readyState === 'complete') {
