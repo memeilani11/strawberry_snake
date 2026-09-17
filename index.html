@@ -40,31 +40,38 @@
     padding:3px 10px;font-size:12px;color:#7d5aaa;font-weight:700}
   .st span{color:#e664a0}
 
-  /* ===== STAGE ===== */
-  #stage{display:flex;gap:8px;padding:8px;
-    height:calc(100% - 62px);min-height:0}
+  /* ===== STAGE (VERTIKAL) ===== */
+  #stage{display:flex;flex-direction:column;align-items:center;
+    gap:8px;padding:8px;height:calc(100% - 62px);min-height:0}
   #boardWrap{flex:1;display:flex;align-items:center;justify-content:center;
-    min-width:0}
+    min-height:0;width:100%}
   canvas{background:#fffafd;border:3px solid #ff91b9;border-radius:12px;
     display:block;touch-action:none;max-width:100%;max-height:100%}
 
-  /* ===== JOYSTICK COLUMN (KANAN) ===== */
-  #joyCol{width:150px;background:#f8e8f5;border:2px solid #dcbedc;
-    border-radius:16px;display:flex;flex-direction:column;align-items:center;
-    padding:8px;gap:8px;flex-shrink:0}
-  #joyCol > p{color:#7d5aaa;font-size:10px;font-weight:700;letter-spacing:1px}
-  #joy{width:120px;height:120px;border-radius:50%;background:#fff;
+  /* ===== BARIS BAWAH: TOMBOL (KIRI) + JOYSTICK (KANAN) ===== */
+  #bottomRow{display:flex;gap:10px;align-items:center;justify-content:center;
+    width:100%;flex-shrink:0}
+
+  /* Tombol PAUSE & RESET di kiri */
+  #btnCol{display:flex;flex-direction:column;gap:8px}
+  #btnCol button{background:#b491e1;color:#fff;border:none;border-radius:12px;
+    padding:12px 24px;font-weight:700;font-size:14px;
+    box-shadow:0 3px 0 #7d5aaa;cursor:pointer;min-width:110px}
+  #btnCol button:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
+
+  /* Joystick di kanan */
+  #joyWrap{background:#f8e8f5;border:2px solid #dcbedc;border-radius:16px;
+    padding:8px 14px;display:flex;align-items:center;gap:10px;
+    touch-action:none}
+  #joy{width:100px;height:100px;border-radius:50%;background:#fff;
     border:5px solid #dcbedc;position:relative;touch-action:none;
     box-shadow:inset 0 0 12px rgba(180,145,225,.25)}
-  #knob{width:46px;height:46px;border-radius:50%;background:#ff91b9;
+  #knob{width:42px;height:42px;border-radius:50%;background:#ff91b9;
     border:3px solid #e664a0;position:absolute;left:50%;top:50%;
     transform:translate(-50%,-50%);pointer-events:none;
     box-shadow:inset -3px -3px 8px rgba(255,255,255,.5)}
-  #joyBtns{display:flex;flex-direction:column;gap:6px;width:100%;margin-top:auto}
-  #joyBtns button{width:100%;background:#b491e1;color:#fff;border:none;
-    border-radius:10px;padding:9px 6px;font-weight:700;font-size:12px;
-    box-shadow:0 3px 0 #7d5aaa;cursor:pointer}
-  #joyBtns button:active{transform:translateY(2px);box-shadow:0 1px 0 #7d5aaa}
+  #joyLabel{color:#7d5aaa;font-size:10px;font-weight:700;letter-spacing:1px;
+    writing-mode:vertical-rl}
 
   /* ===== OVERLAY GAME OVER ===== */
   #overlay{position:fixed;inset:0;background:rgba(80,50,90,.88);
@@ -77,16 +84,15 @@
     font-size:18px;font-weight:700;border-radius:14px;box-shadow:0 4px 0 #e664a0}
   #overlay button:active{transform:translateY(2px);box-shadow:0 2px 0 #e664a0}
 
-  @media(max-width:520px){
-    #joyCol{width:120px;padding:6px;gap:6px}
-    #joy{width:96px;height:96px;border-width:4px}
-    #knob{width:38px;height:38px}
-    #joyCol > p{font-size:9px}
+  @media(max-width:380px){
+    #joy{width:84px;height:84px}
+    #knob{width:36px;height:36px}
+    #btnCol button{padding:10px 16px;font-size:13px;min-width:90px}
   }
   @media(max-height:640px){
     #joy{width:84px;height:84px}
     #knob{width:34px;height:34px}
-    #joyBtns button{padding:7px 4px;font-size:11px}
+    #btnCol button{padding:8px 16px;font-size:12px}
   }
 </style>
 </head>
@@ -114,12 +120,16 @@
 <div id="stage">
   <div id="boardWrap"><canvas id="cv"></canvas></div>
 
-  <div id="joyCol">
-    <p>JOYSTICK</p>
-    <div id="joy"><div id="knob"></div></div>
-    <div id="joyBtns">
+  <!-- Tombol (kiri) + Joystick (kanan) -->
+  <div id="bottomRow">
+    <div id="btnCol">
       <button id="pauseBtn">PAUSE</button>
       <button id="resetBtn">RESET</button>
+    </div>
+
+    <div id="joyWrap">
+      <div id="joyLabel">JOYSTICK</div>
+      <div id="joy"><div id="knob"></div></div>
     </div>
   </div>
 </div>
@@ -158,7 +168,6 @@
     pctTxt.textContent = '100%';
     setTimeout(function(){
       loader.classList.add('hide');
-      // mulai game setelah loader hilang
       reset();
       running = true;
       requestAnimationFrame(loop);
@@ -169,14 +178,14 @@
   var CV  = document.getElementById('cv');
   var ctx = CV.getContext('2d');
 
-  var G = 20;          // ukuran grid
-  var COLS = 13;       // jumlah kolom
-  var ROWS = 18;       // jumlah baris
+  var G = 20;
+  var COLS = 13;
+  var ROWS = 18;
   var W = COLS * G;
   var H = ROWS * G;
 
-  var FOOD_N   = 5;
-  var STEP_MS  = 180;
+  var FOOD_N  = 5;
+  var STEP_MS = 180;
 
   CV.width  = W;
   CV.height = H;
@@ -466,18 +475,15 @@
   };
 
   /* ================= START LOADING ================= */
-  // kalau semua asset sudah siap, selesaikan loading
   if (document.readyState === 'complete') {
     setTimeout(finishLoading, 700);
   } else {
     window.addEventListener('load', function(){
       setTimeout(finishLoading, 700);
     });
-    // safety: kalau load tidak terpanggil dalam 3.5 detik, paksa selesai
     setTimeout(finishLoading, 3500);
   }
 
-  // gambar awal papan (kosong) sambil loading
   ctx.fillStyle = '#fffafd';
   ctx.fillRect(0, 0, W, H);
 })();
